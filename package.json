@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "element-plus": "^2.2.8",
-    "note": "^1.2.1",
+    "tone": "^14.7.77",
     "vue": "^3.2.37"
   },
   "devDependencies": {

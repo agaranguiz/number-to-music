@@ -1,23 +1,24 @@
 <script>
+import * as Tone from 'tone';
 export default {
   data() {
     return {
-      count: 0
+      number: 0
     }
   },
   methods: {
-    increment() {
-      this.count++
+    playTestSound() {
+      const synth = new Tone.Synth().toDestination();
+      synth.triggerAttackRelease("C4", "8n");
     }
   },
   mounted() {
-    // methods can be called in lifecycle hooks, or other methods!
-    this.increment()
+    
   }
 }
 </script>
 <template>
-<h1> {{count}} </h1>
+<el-button @click="playTestSound">Play</el-button>
 </template>
 <style>
 
