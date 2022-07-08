@@ -1,29 +1,5 @@
 # number-to-music
 
-This template should help get you started developing with Vue 3 in Vite.
+This small program allows your to "hear" numbers. The idea is that numbers are converted to base 7, and then using the Nashville Number System notation (using 0 as 7) are interpreted as chords.
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+The project is written using Vue.js 3, Element Plus and Tone.js
