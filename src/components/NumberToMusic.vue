@@ -5,23 +5,23 @@ export default {
     return {
       number: 0,
       numberB7: 0,
-      notes: []
+      chords: []
     }
   },
   computed: {
-    notesString() {
+    chordsString() {
       let string = "";
-      for (let note of this.notes) {
-        string += "#" + note + " - ";
+      for (let chord of this.chords) {
+        string += chord + " - ";
       }
       return string.slice(0, -3);
     }
   },
   methods: {
     convert: function () {
-      this.notes = [];
+      this.chords = [];
       let numberFloat = parseFloat(this.number);
-      let scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];      
+      let scale = ['B', 'C', 'D', 'E', 'F', 'G', 'A'];      
       if(typeof(numberFloat) == 'number') {
         if(numberFloat < 0) {
           numberFloat *= -1;
@@ -29,9 +29,12 @@ export default {
         this.numberB7 = numberFloat.toString(7);
         for(let i = 0; i < this.numberB7.length; i++) {
           let index = this.numberB7.charAt(i);
-          this.notes.push(scale[index]);
+          if(index == '.') {
+            this.chords.push('.')
+          } else {
+            this.chords.push(scale[index]);
+          }          
         }
-        console.log(JSON.stringify(this.notes, null, 2));
       } else {
         console.log("Error")
       }
@@ -39,15 +42,19 @@ export default {
     play: function() {
       const synth = new Tone.Synth().toDestination();
       const now = Tone.now();
+      let speed = 2;      
+      let duration = "8n";
       let count = 0;
-      for (let note of this.notes) {
-        synth.triggerAttackRelease(note + "4", "16n", now + count);
-        count++;
+      for (let chord of this.chords) {
+        if(chord == '.') {
+          synth.triggerAttackRelease("C1", "0", now + count/speed);
+          speed = 4;
+          duration = "16n";
+        } else {
+          synth.triggerAttackRelease(chord + "4", duration, now + count/speed);
+        }
+        count++;     
       }
-    },
-    playTestSound: function () {
-      const synth = new Tone.Synth().toDestination();
-      synth.triggerAttackRelease("C4", "8n");
     }
   },
   mounted() {
@@ -57,26 +64,72 @@ export default {
 </script>
 <template>
 <el-container>
-  <el-header>Type a number, then click 'Play' to hear what it sounds like</el-header>
+  <el-header>Type a number, convert it, then click 'Play' to hear what it sounds like</el-header>
   <el-main>
-    <el-form>
-      <el-form-item label="Number">
-        <el-input-number :controls="false" v-model="number"></el-input-number>
-      </el-form-item>
-      <el-form-item label="Base 7">
-        <el-input :controls="false" v-model="numberB7" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="To notes">
-        <el-input v-model="notesString" disabled></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="convert">Convert</el-button>
-        <el-button @click="play">Play</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row :gutter="20" justify="center">
+      <el-col :span="6">
+        <span>Number</span>     
+      </el-col>
+      <el-col :span="18">  
+        <el-tooltip content="Enter a number">
+          <el-input-number :controls="false" v-model="number"></el-input-number>
+        </el-tooltip>          
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="6">
+          <span>Base 7</span>    
+      </el-col>
+      <el-col :span="18">
+        <el-tooltip content="The number converted to base 7. We use the NNS notation on the key of C">
+          <span> {{ numberB7 }} </span>
+        </el-tooltip>        
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="6">
+        <span>To letter notation</span>
+      </el-col>
+      <el-col :span="18">
+        <el-tooltip content="We take the new number convert it to letter notation">
+          <span> {{ chordsString }} </span>
+        </el-tooltip>        
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="8">
+        <el-button @click="convert" type="primary">Convert</el-button>
+      </el-col>
+      <el-col :span="8">
+        <el-button @click="play" type="success">Play</el-button>
+      </el-col>
+    </el-row>
   </el-main>
 </el-container>
 </template>
 <style>
-
+.el-row {
+  margin-bottom: 20px;
+}
+.el-row:last-child {
+  margin-bottom: 0;
+}
+.el-col {
+  border-radius: 4px;
+}
+.tooltip-base-box {
+  width: 600px;
+}
+.tooltip-base-box .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tooltip-base-box .center {
+  justify-content: center;
+}
+.tooltip-base-box .box-item {
+  width: 210px;
+  margin-top: 10px;
+}
 </style>
